@@ -1,0 +1,27 @@
+-- invoice_definitions.txt
+system invoice
+
+nothing
+  --skip
+
+add_type(product_id: STRING)
+  -- e.g. add("nuts")
+  -- product types must be declared in advance of orders
+
+add_product(a_product: STRING; quantity: INTEGER)
+  -- e.g. add_product("nuts", 1000)
+  -- adds 1000 nuts to stock
+
+add_order (a_order: ARRAY[ TUPLE[ pid:STRING; no:INTEGER ] ] )
+  -- e.g. place_order(<<["nuts", 5], ["bolts", 12]>> )
+  -- system assigns a unique order ID seen at the output
+  -- if successful, items removed from stock
+
+invoice(order_id: INTEGER)
+  -- e.g. do_invoice(1)
+  -- change order ID 1 from pending to invoiced
+
+cancel_order(order_id: INTEGER)
+  -- e.g. cancel_order(1)
+  -- items are returned to stock
+  -- order_id is freed up
