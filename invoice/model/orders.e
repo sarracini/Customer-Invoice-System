@@ -17,23 +17,38 @@ feature -- creation features
 	end
 
 feature -- attributes
-	list_of_orders: HASH_TABLE[TUPLE[product: STOCK; status: STRING], INTEGER]
+	list_of_orders: HASH_TABLE[TUPLE[a_array2: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]]; status: STRING], INTEGER]
 	available_ids: SORTED_TWO_WAY_LIST[INTEGER]
 	order_id_counter: INTEGER
 
 feature -- commands
 
 	create_order(a_array: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]])
-	local
-		stock: STOCK
 	do
-		create stock.make_array_of_products(a_array)
 		if available_ids.count /= 0 then
-			list_of_orders.put ([stock, "pending"], available_ids.min)
+			list_of_orders.put ([a_array, "pending"], available_ids.min)
 		elseif order_id_counter < 10000 then
-			list_of_orders.put ([stock, "pending"], order_id_counter)
+			list_of_orders.put ([a_array, "pending"], order_id_counter)
 			order_id_counter := order_id_counter + 1
 		end
+	end
+
+	contains(id: INTEGER) : BOOLEAN
+	do
+		list_of_orders.search (id)
+		if list_of_orders.found then
+			Result:= true
+		else
+			Result:= false
+		end
+	end
+
+	sort_orders()
+	do
+
+	end
+	set_order_state()
+	do
 
 	end
 end

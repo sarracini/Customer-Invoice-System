@@ -43,15 +43,18 @@ feature -- queries
 	out : STRING
 		do
 			s:=""
-			s.append ("%N report: "+ status_message)
-			s.append ("%N id: "                 )
-			s.append ("%N products: "           )
+			s.append ("%N report: %T"+ status_message)
+			s.append ("%N id: %T")
+			s.append (stock.order.order_id_counter.out)
+			s.append ("%N products: %T")
 			across stock.product.current_keys as it loop  s.append (it.item.out + ", ") end
-			s.append ("%N stock: "              )
-			across stock.product.current_keys as it loop  s.append (it.item.out + "->" + stock.product.at (it.item).out) end
-			s.append ("%N orders: "             )
-			s.append ("%N carts: "              )
-			s.append ("%N order_state: "        )
+			s.append ("%N stock: %T")
+			across stock.product.current_keys as it loop  s.append (it.item.out + "->" + stock.product.at (it.item).out + " ") end
+			s.append ("%N orders: %T")
+			s.append (stock.order.list_of_orders.count.out)
+			s.append ("%N carts: %T")
+			across stock.order.list_of_orders.current_keys as it loop  s.append (it.item.out + ": ") end
+			s.append ("%N order_state: %T")
 			Result:= s
 		end
 feature -- commands
@@ -72,7 +75,7 @@ feature -- commands
 
 	add_order(a_order: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]])
 	do
-		create stock.make_array_of_products (a_order)
+		stock.add_order(a_order)
 	end
 
 	invoice(order_id: INTEGER)
@@ -82,7 +85,7 @@ feature -- commands
 
 	cancel_order(order_id: INTEGER)
 	do
-
+		
 	end
 
 	status_message : STRING
