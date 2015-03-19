@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {ORDERS}."
-	author: ""
+	author: “Ursula Sarracini“
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,45 +10,46 @@ create
 	make
 
 feature -- creation features
-	make
+	make(bag:MY_BAG[STRING])
 	do
-		create list_of_orders.make(0)
-		create available_ids.make
+		create order_items.make_empty
+		order_status:= "pending"
+		order_id:= 0
+		order_items:= bag
 	end
 
 feature -- attributes
-	list_of_orders: HASH_TABLE[TUPLE[a_array2: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]]; status: STRING], INTEGER]
-	available_ids: SORTED_TWO_WAY_LIST[INTEGER]
-	order_id_counter: INTEGER
+	order_status: STRING
+	order_id: INTEGER
+	order_items: MY_BAG[STRING]
 
 feature -- commands
 
-	create_order(a_array: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]])
+	change_status(o_status:STRING)
 	do
-		if available_ids.count /= 0 then
-			list_of_orders.put ([a_array, "pending"], available_ids.min)
-		elseif order_id_counter < 10000 then
-			list_of_orders.put ([a_array, "pending"], order_id_counter)
-			order_id_counter := order_id_counter + 1
+		order_status:= o_status
+	end
+
+	set_order_id(o_id:INTEGER)
+	do
+		order_id:= o_id
+	end
+
+	get_order_id : INTEGER
+	do
+		Result:= order_id
+	end
+
+	get_order_status : STRING
+	do
+		Result:= order_status
+	end
+
+	get_order_items: STRING
+	do
+		Result:= ""
+		across order_items.domain as it
+		loop
+			Result.append (it.item.out + " -> " + order_items.occurrences (it.item).out)
 		end
-	end
-
-	contains(id: INTEGER) : BOOLEAN
-	do
-		list_of_orders.search (id)
-		if list_of_orders.found then
-			Result:= true
-		else
-			Result:= false
-		end
-	end
-
-	sort_orders()
-	do
-
-	end
-	set_order_state()
-	do
-
-	end
-end
+	endend

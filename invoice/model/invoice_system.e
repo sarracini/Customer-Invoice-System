@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {INVOICE_SYSTEM}."
-	author: ""
+	author: “Ursula Sarracini”
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			create s.make_empty
 			i := 0
-			create stock.make_single_product
+			create stock.make
 		end
 
 feature -- model attributes
@@ -45,15 +45,23 @@ feature -- queries
 			s:=""
 			s.append ("%N report: %T"+ status_message)
 			s.append ("%N id: %T")
-			s.append (stock.order.order_id_counter.out)
+			s.append (stock.order_count.out)
 			s.append ("%N products: %T")
-			across stock.product.current_keys as it loop  s.append (it.item.out + ", ") end
-			s.append ("%N stock: %T")
-			across stock.product.current_keys as it loop  s.append (it.item.out + "->" + stock.product.at (it.item).out + " ") end
+			across stock.products.domain as z
+			loop
+				s.append (z.item.out + "-> " + stock.products.occurrences (z.item).out)
+				s.append (" ")
+			end
 			s.append ("%N orders: %T")
-			s.append (stock.order.list_of_orders.count.out)
+			s.append (stock.carts.current_keys.count.out)
 			s.append ("%N carts: %T")
-			across stock.order.list_of_orders.current_keys as it loop  s.append (it.item.out + ": ") end
+			across stock.carts.current_keys as z
+			loop
+				if attached stock.carts.at (z.item) as g then
+					s.append (g.get_order_id.out + ":")
+					s.append (g.get_order_items)
+				end
+			end
 			s.append ("%N order_state: %T")
 			Result:= s
 		end

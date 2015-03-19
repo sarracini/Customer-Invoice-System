@@ -1,111 +1,75 @@
 note
 	description: "Summary description for {STOCK}: This class holds the stock (the full list of products available) and all operations done to the products"
-	author: ""
+	author: “Ursula Sarracini“
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	STOCK
 create
-	make_single_product
+	make
 
 feature -- creation features
 
-	make_single_product
+	make
 	do
-		create product.make(0)
-		create order.make
+		create products.make_empty
+		create carts.make (0)
+		create free_orders.make
+		order_count := 1
 	end
 
 feature -- attributes
-	product: HASH_TABLE[INTEGER, STRING]
-	order: 	ORDERS
+	product: MY_BAG[STRING]
+	carts: HASH_TABLE[ORDERS, INTEGER]
+	free_orders: SORTED_TWO_WAY_LIST[INTEGER]
+	order_count: INTEGER
 
 feature -- commands
 
 	create_type(product_name: STRING)
 	do
-		product.put (0, product_name)
+		product.extend(product_name, 0)
 	end
 
 	add_to_stock(product_name: STRING; product_quantity: INTEGER)
-	local
-		item_val: INTEGER
 	do
-		if product_in_stock(product_name) then
-			item_val := product.item (product_name)
-			item_val := product_quantity + item_val
-			product.remove (product_name)
-			product.put (item_val, product_name)
-		end
+		product.extend(product_name, product_quantity)
 	end
 
 	remove_from_stock(stock_to_be_delivered: like Current)
 	do
 
 	end
-
-	update_quantity(product_name: STRING; new_quantity: INTEGER)
+	
+	create_order(bag:MY_BAG[STRING])
+	local
+		an_order: ORDERS
 	do
-		add_to_stock(product_name, new_quantity)
+		create an_order.make(bag)
+		if free_orders.count /=0 then
+			an_order.set_order_id (free_orders.min)
+		elseif order_count < 10000 then
+			an_order.set_order_id (order_count)
+			order_count:=order_count+1
+		end
+		carts.extend (an_order, an_order.get_order_id)
+		product.remove_all(bag)
 	end
-
+	
 	add_order(a_array: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]])
 	local
-		place_order : BOOLEAN
+		the_bag: MY_BAG[STRING]
 	do
-		across a_array as it
-			loop
-				if product_in_stock(it.item.product_name) then
-					if stock_has_enough_quantity(it.item.product_name, it.item.product_quantity) then
-						place_order := true
-					--	remove_from_stock(a_array)
-					end
-				end
-			end
+		create the_bag.make_from_tupled_array (a_array)
 
-		if place_order then
-			across a_array as it
-				loop
-					update_quantity(it.item.product_name, (-1)*it.item.product_quantity)
-				end
-			order.create_order(a_array)
+		if the_bag.is_subset_of(product) then
+			create_order(the_bag)
 		end
 	end
 
 	delete_order(order_id: INTEGER)
 	do
-		if order.contains(order_id) then
-			across order.list_of_orders.at (order_id).a_array2 as it
-			loop
-				update_quantity(it.item.product_name, it.item.product_quantity)
-			end
-		end
-	end
-
-feature -- queries
-
-	product_in_stock(product_name: STRING) : BOOLEAN
-	do
-		product.search (product_name)
-		if product.found then
-			Result:= true
-		else
-			Result:= false
-		end
-	end
-
-	stock_has_enough_quantity(product_name: STRING; product_quantity: INTEGER) : BOOLEAN
-	do
-		product.search (product_name)
-		if product_in_stock(product_name) then
-			if product.found_item - product_quantity >= 0 then
-				Result:= true
-			else
-				Result:= false
-			end
-		else
-			Result:= false
-		end
+	
 	end
 end
