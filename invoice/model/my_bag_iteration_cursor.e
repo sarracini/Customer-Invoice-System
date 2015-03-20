@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {MY_BAG_ITERATION_CURSOR}."
-	author: ""
+	author: “Ursula Sarracini“
 	date: "$Date$"
 	revision: "$Revision$"
 

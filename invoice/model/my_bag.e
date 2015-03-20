@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {MY_BAG}."
-	author: ""
+	description: “Data structure to store products in.”
+	author: “Ursula Sarracini“
 	date: "$Date$"
 	revision: "$Revision$"
 
