@@ -5,16 +5,28 @@ note
 	revision: "$Revision$"
 
 class INVOICE
-inherit 
+inherit
 	INVOICE_INTERFACE
 	redefine invoice end
 create
 	make
-feature -- command 
+feature -- command
 	invoice(order_id: INTEGER)
+		local
+			m: STATUS_MESSAGE
     	do
-			-- perform some update on the model state
-			model.default_update
+			create m.make_ok
+			if not model.stock.valid_id(order_id) then
+				create m.make_order_id_not_valid
+				model.set_status_message (m)
+			elseif model.stock.already_invoiced(order_id) then
+				create m.make_order_already_invoiced
+				model.set_status_message (m)
+			else
+				model.invoice(order_id)
+				model.set_status_message (m)
+			end
+
 			container.on_change.notify ([Current])
     	end
 

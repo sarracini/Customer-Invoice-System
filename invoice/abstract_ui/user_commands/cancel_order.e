@@ -5,16 +5,25 @@ note
 	revision: "$Revision$"
 
 class CANCEL_ORDER
-inherit 
+inherit
 	CANCEL_ORDER_INTERFACE
 	redefine cancel_order end
 create
 	make
-feature -- command 
+feature -- command
 	cancel_order(order_id: INTEGER)
+		local
+			m: STATUS_MESSAGE
     	do
-			-- perform some update on the model state
-			model.default_update
+			create m.make_ok
+			if not model.stock.valid_id(order_id) then
+				create m.make_order_id_not_valid
+				model.set_status_message (m)
+			else
+				model.cancel_order (order_id)
+				model.set_status_message (m)
+			end
+
 			container.on_change.notify ([Current])
     	end
 

@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {ORDERS}."
-	author: “Ursula Sarracini“
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,7 +10,7 @@ create
 	make
 
 feature -- creation features
-	make(bag:MY_BAG[STRING])
+	make(bag: MY_BAG[STRING])
 	do
 		create order_items.make_empty
 		order_status:= "pending"
@@ -45,11 +45,17 @@ feature -- commands
 		Result:= order_status
 	end
 
-	get_order_items: STRING
+	get_order_items : STRING
 	do
 		Result:= ""
 		across order_items.domain as it
 		loop
-			Result.append (it.item.out + " -> " + order_items.occurrences (it.item).out)
+			Result.append (it.item.out + "->" + order_items.occurrences (it.item).out)
 		end
-	endend
+	end
+
+	get_items_in_bag : MY_BAG[STRING]
+	do
+		Result:= order_items
+	end
+end

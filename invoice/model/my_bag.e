@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {MY_BAG}."
-	author: “Ursula Sarracini“
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -53,7 +53,7 @@ feature  -- queries
 	is_nonnegative(a_array: ARRAY [TUPLE [x: G; y: INTEGER]]): BOOLEAN
 		-- Checks that all items in the bag have non negative value i.e strictly greater or equal to 0
 	do
-		Result := (across a_array as it all it.item.y >=0 end)
+		Result := (across a_array as it all it.item.y >= 0 end)
 	end
 
 	bag_equal alias "|=|"(other: like Current): BOOLEAN
@@ -113,6 +113,18 @@ feature  -- queries
 	debug_output: READABLE_STRING_GENERAL
 	do
 		Result := ""
+	end
+
+	is_same_items (other: like Current) : BOOLEAN
+	do
+		Result:= across other.domain as g all
+					found_item(g.item) end
+	end
+
+	has_enough_items (other: like Current) : BOOLEAN
+	do
+		Result:= across other.domain as g all
+						occurrences(g.item) <= other.occurrences(g.item) end
 	end
 
 feature -- commands

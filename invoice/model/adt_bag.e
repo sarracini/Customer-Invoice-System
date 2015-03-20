@@ -72,15 +72,15 @@ feature -- queries
 		deferred
 		ensure
 			Result >= 0
-			has(key) implies Result > 0
+			has(key) implies Result >= 0
 		end
 
 	has(a_item: G) : BOOLEAN
 			-- bag has element `a_item'
 		do
-			Result := occurrences (a_item) > 0
+			Result := occurrences (a_item) >= 0
 		ensure
-			has_item: Result = (occurrences (a_item) > 0)
+			has_item: Result = (occurrences (a_item) >= 0)
 		end
 
 	is_subset_of alias "|<:" (other: like Current): BOOLEAN
@@ -154,7 +154,7 @@ invariant
 	consistent_count: count = domain.count
 	nonnegative_items:
 	   across domain as it all
-	      occurrences (it.item) > 0
+	      occurrences (it.item) >= 0
 	   end
 	reflexivity: Current |=| Current
 
