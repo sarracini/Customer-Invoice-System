@@ -32,12 +32,12 @@ feature -- queries
 
 	model_state : STRING
 		do
-			Result := model.out + "%N"
+			Result := model.out + "%N" --+ "%NEnter an event, 'man' for the list of declared events, or 'quit' to terminate...%N" + "%N"
 		end
 
 	initial_state : STRING
 		do
-			Result := "  init%N" -- may be redefined
+			Result := model.out + "%N"
 		end
 
 feature -- Log to 'output'

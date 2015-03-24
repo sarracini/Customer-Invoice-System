@@ -1,6 +1,6 @@
 note
-	description: “Data structure to store products in.”
-	author: “Ursula Sarracini“
+	description: "Summary description for {MY_BAG}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -105,7 +105,7 @@ feature  -- queries
 		-- Is the current bag a subset of the other bag?
 	do
 		Result:= across domain as g all
-					has(g.item) implies other.has(g.item) and then
+					found_item(g.item) implies found_item(g.item) and then
 					occurrences(g.item) <= other.occurrences(g.item)
 				end
 	end
@@ -205,7 +205,7 @@ feature -- helper queries and commands
 	subtract_single(a_key: G; a_quantity: INTEGER)
 		-- To subract a single item from a bag
 	require
-		verify_subtraction(a_key, a_quantity) > 0
+		verify_subtraction(a_key, a_quantity) >= 0
 	local
 		item_value:INTEGER
 	do

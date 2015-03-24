@@ -45,19 +45,18 @@ feature -- queries
 	out : STRING
 	local
 		domain_count:INTEGER
+		last_position:INTEGER
 		do
 			s:= ""
 			----------------------------------------- report
-			s.append ("report: %T"+ status_message.out)
+			s.append ("  report:      "+ status_message.out)
+
+			----------------------------------------- id
 			domain_count:= 1
-			if stock.order_id_list.count /= 0 then
-				s.append ("%N id: %T%T" + stock.order_id_list.last.out)
-			else
-				s.append ("%N id: %T%T0")
-			end
+			s.append ("%N  id:          " + stock.current_id.out)
 
 			---------------------------------------- products
-			s.append ("%N products: %T")
+			s.append ("%N  products:    ")
 			domain_count:= 1
 			across stock.product.domain as it
 			loop
@@ -70,22 +69,29 @@ feature -- queries
 			end
 
 			---------------------------------------- stock
-			s.append ("%N stock: %T")
+			s.append ("%N  stock:       ")
 			domain_count:= 1
 			across stock.product.domain as it
 			loop
 				if stock.product.occurrences (it.item) > 0 then
-					if domain_count /= stock.product.domain.count then
-						s.append (it.item.out + "->" + stock.product.occurrences (it.item).out + ",")
-					else
-						s.append (it.item.out + "->" + stock.product.occurrences (it.item).out)
-					end
+					last_position:= domain_count
+				end
 				domain_count:= domain_count + 1
+			end
+
+			across stock.product.domain as it
+			loop
+				if stock.product.occurrences (it.item) > 0 then
+					if stock.product.domain.at (last_position) = it.item then
+						s.append (it.item.out + "->" + stock.product.occurrences (it.item).out)
+					else
+						s.append (it.item.out + "->" + stock.product.occurrences (it.item).out + ",")
+					end
 				end
 			end
 
 			----------------------------------------- orders
-			s.append ("%N orders: %T")
+			s.append ("%N  orders:      ")
 			domain_count:= 1
 			across stock.order_id_list as it
 			loop
@@ -98,16 +104,20 @@ feature -- queries
 			end
 
 			------------------------------------------- carts		
-			s.append ("%N carts: %T")
+			s.append ("%N  carts:       ")
 			across stock.order_id_list as it loop
 				if attached stock.carts.at (it.item) as g then
 					s.append (g.get_order_id.out + ": ")
-					s.append (g.get_order_items + "%N%T%T")
+					if stock.order_id_list.at (stock.order_id_list.count) = it.item then
+						s.append (g.get_order_items + "       ")
+					else
+						s.append (g.get_order_items + "%N               ")
+					end
 				end
 			end
 
 			-------------------------------------------- order state
-			s.append ("%N order_state: %T")
+			s.append ("%N  order_state: ")
 			domain_count:= 1
 			across stock.order_id_list as it
 			loop

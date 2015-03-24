@@ -17,7 +17,7 @@ feature -- creation features
 		create carts.make (0)
 		create free_orders.make
 		create order_id_list.make (0)
-		order_count := 0
+		order_count := 1
 	end
 
 feature -- attributes
@@ -44,14 +44,18 @@ feature -- commands
 	local
 		an_order: ORDERS
 	do
-		order_count:= order_count + 1
 		create an_order.make(bag)
 		if free_orders.count /=0 then
 			an_order.set_order_id (free_orders.min)
 			order_id_list.extend (free_orders.min)
+			free_orders.search (free_orders.min)
+			current_id:= free_orders.min
+			free_orders.remove
 		elseif order_count < 10000 then
 			an_order.set_order_id (order_count)
 			order_id_list.extend (order_count)
+			current_id:= order_count
+			order_count:= order_count + 1
 		end
 		carts.force (an_order, an_order.get_order_id)
 		product.remove_all(bag)
@@ -124,7 +128,7 @@ feature -- commands
 		end
 	end
 
-	already_invoiced(order_id:INTEGER):BOOLEAN
+	already_invoiced(order_id:INTEGER) : BOOLEAN
 	do
 		Result:=false
 		if attached carts.at (order_id) as z then
@@ -132,5 +136,10 @@ feature -- commands
 				Result:=true
 			end
 		end
+	end
+
+	get_current_id : INTEGER
+	do
+		Result:= current_id
 	end
 end

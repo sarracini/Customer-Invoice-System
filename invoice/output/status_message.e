@@ -1,6 +1,6 @@
 note
 	description: "Error messages for invoice system."
-	author: “Ursula Sarracini“
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

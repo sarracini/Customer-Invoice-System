@@ -34,7 +34,7 @@ feature -- command
 				create m.make_products_not_valid
 				model.set_status_message (m)
 
-			elseif model.stock.product.has_enough_items (local_bag) then
+			elseif not local_bag.has_enough_items (model.stock.product) then
 				create m.make_not_enough_stock
 				model.set_status_message (m)
 

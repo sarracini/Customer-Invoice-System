@@ -50,7 +50,11 @@ feature -- commands
 		Result:= ""
 		across order_items.domain as it
 		loop
-			Result.append (it.item.out + "->" + order_items.occurrences (it.item).out)
+			if order_items.domain.at (order_items.domain.count) = it.item  then
+				Result.append (it.item.out + "->" + order_items.occurrences (it.item).out)
+			else
+				Result.append (it.item.out + "->" + order_items.occurrences (it.item).out+ ",")
+			end
 		end
 	end
 
