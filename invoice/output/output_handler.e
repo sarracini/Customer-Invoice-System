@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {OUTPUT_HANDLER}."
-	author: ""
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {INVOICE_SYSTEM_ACCESS}."
-	author: ""
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 

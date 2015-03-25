@@ -1,6 +1,6 @@
 note
 	description: ""
-	author: ""
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,6 +19,7 @@ feature -- command
 			if not model.stock.valid_id(order_id) then
 				create m.make_order_id_not_valid
 				model.set_status_message (m)
+
 			else
 				model.cancel_order (order_id)
 				model.set_status_message (m)

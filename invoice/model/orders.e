@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ORDERS}."
+	description: "Creates a single order which contains."
 	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,15 +25,17 @@ feature -- attributes
 
 feature -- commands
 
-	change_status(o_status:STRING)
+	change_status(o_status: STRING)
 	do
 		order_status:= o_status
 	end
 
-	set_order_id(o_id:INTEGER)
+	set_order_id(o_id: INTEGER)
 	do
 		order_id:= o_id
 	end
+
+feature -- queries
 
 	get_order_id : INTEGER
 	do
@@ -53,7 +55,7 @@ feature -- commands
 			if order_items.domain.at (order_items.domain.count) = it.item  then
 				Result.append (it.item.out + "->" + order_items.occurrences (it.item).out)
 			else
-				Result.append (it.item.out + "->" + order_items.occurrences (it.item).out+ ",")
+				Result.append (it.item.out + "->" + order_items.occurrences (it.item).out + ",")
 			end
 		end
 	end

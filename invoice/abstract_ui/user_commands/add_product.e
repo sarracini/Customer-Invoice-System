@@ -1,6 +1,6 @@
 note
 	description: ""
-	author: ""
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,9 +19,11 @@ feature -- command
     		if not m.product_positive_quantity (quantity) then
     			create m.make_positive_quantity
     			model.set_status_message (m)
+
     		elseif not model.stock.product_in_stock (a_product) then
     			create m.make_product_in_database
     			model.set_status_message (m)
+
     		else
     			model.add_product (a_product, quantity)
     			model.set_status_message (m)

@@ -1,6 +1,6 @@
 note
 	description: ""
-	author: ""
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +13,6 @@ create
 feature -- command
 	nothing
     	do
-			-- perform some update on the model state
 			model.nothing
 			container.on_change.notify ([Current])
     	end

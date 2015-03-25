@@ -1,6 +1,6 @@
 note
 	description: ""
-	author: ""
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 

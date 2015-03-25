@@ -1,6 +1,6 @@
 note
 	description: ""
-	author: ""
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,6 +23,7 @@ feature -- command
 			elseif model.stock.product_in_stock (product_id) then
 				create m.make_type_in_database
 				model.set_status_message (m)
+
 			else
 				model.add_type (product_id)
 				model.set_status_message (m)
