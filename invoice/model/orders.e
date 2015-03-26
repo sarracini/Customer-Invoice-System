@@ -28,7 +28,7 @@ feature -- commands
 	change_status(o_status: STRING)
 		-- Change the status of the current order
 	require
-		o_status.count > 0
+		status_exists: o_status.count > 0
 	do
 		order_status:= o_status
 	ensure
@@ -38,7 +38,7 @@ feature -- commands
 	set_order_id(o_id: INTEGER)
 		-- Set the order id to a unique number
 	require
-		o_id > 0
+		positive_order_id: o_id > 0
 	do
 		order_id:= o_id
 	ensure
