@@ -124,6 +124,8 @@ feature
 	err_order_id_not_valid : INTEGER = 11
 	err_order_already_invoiced : INTEGER = 12
 
+feature -- helper queries
+
 	valid_message(a_message_no:INTEGER): BOOLEAN
 	do
 		Result := err_message.lower <= a_message_no

@@ -30,7 +30,7 @@ feature -- command
 				create m.make_positive_quantity
 				model.set_status_message (m)
 
-			elseif not model.stock.product.is_same_items (local_bag) then
+			elseif not model.stock.product.has_same_items (local_bag) then
 				create m.make_products_not_valid
 				model.set_status_message (m)
 

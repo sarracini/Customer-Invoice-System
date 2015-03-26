@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {STOCK}: This class holds the stock (the full list of products available) and all operations done to the products"
+	description: "This class holds the stock (the full list of products available) and all operations done to the products"
 	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,7 +100,7 @@ feature -- commands
 	delete_order(order_id: INTEGER)
 		-- Deletes an order i.e removes it from the cart, frees up the order id, update order id list
 	require
-		order_id_positive: order_id > 0
+		order_id_positive: order_id >= 0
 	do
 		carts.search(order_id)
 		if carts.found then
@@ -117,13 +117,13 @@ feature -- commands
 		available_orders_updated: available_orders.count = old available_orders.count + 1
 		order_id_list_updated: order_id_list.count = old order_id_list.count - 1
 		number_of_orders_updated: number_of_orders = old number_of_orders - 1
-	--	removed_from_cart: attached carts.at (1) as g and then g.get_items_in_bag.found_item (g) = false
+		removed_from_cart: attached carts.at (1) as g and then g.get_items_in_bag.found_item (g) = false
 	end
 
 	do_invoice(order_id: INTEGER)
 		-- Process an invoice i.e change status from "pending" to "invoiced"
 	require
-		order_id_positive: order_id > 0
+		order_id_positive: order_id >= 0
 	do
 		carts.search (order_id)
 		if carts.found then
@@ -168,7 +168,7 @@ feature -- queries
 	valid_id(order_id : INTEGER) : BOOLEAN
 		-- Returns true if the order passed is found in the order id list and false otherwise
 	require
-		order_id_postitive: order_id > 0
+		order_id_postitive: order_id >= 0
 	do
 		across order_id_list as it
 		loop
@@ -181,7 +181,7 @@ feature -- queries
 	already_invoiced(order_id: INTEGER) : BOOLEAN
 		-- Returns true if the order that we are trying to invoice has already been invoiced and false otherwise
 	require
-		order_id_positive: order_id > 0
+		order_id_positive: order_id >= 0
 	do
 		Result:= false
 		if attached carts.at (order_id) as it then

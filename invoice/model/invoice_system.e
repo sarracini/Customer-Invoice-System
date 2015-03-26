@@ -166,7 +166,7 @@ feature -- commands
 		stock.order_id_list.count < 10000
 		not stock.verify_duplicates(a_order)
 		across a_order as it all it.item.product_quantity > 0 end
-		stock.product.is_same_items (create{MY_BAG[STRING]}.make_from_tupled_array (a_order))
+		stock.product.has_same_items (create{MY_BAG[STRING]}.make_from_tupled_array (a_order))
 		(create{MY_BAG[STRING]}.make_from_tupled_array (a_order)).has_enough_items(stock.product)
 	do
 		stock.add_order (a_order)

@@ -1,5 +1,5 @@
 note
-	description: "Creates a single order which contains."
+	description: "Creates a single order which contains an array of types and associated quantities to be deduced from stock."
 	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"

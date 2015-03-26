@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {MY_BAG}."
+	description: "ADT for a set with multiplicity."
 	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,7 +69,7 @@ feature  -- queries
 	end
 
 	domain: ARRAY[G]
-		-- Returns the domain of the bag i.e the names of the items present in the bag
+		-- Returns the domain of the bag i.e the names of the items present in the bag in sorted order
 	local
 		sorted:LIST[G]
 		arr:ARRAY[G]
@@ -102,7 +102,7 @@ feature  -- queries
 	end
 
 	is_subset_of alias "|<:" (other: like Current): BOOLEAN
-		-- Is the current bag a subset of the other bag?
+		-- Is the current bag a subset of the other bag? i.e same items and less than occurrences
 	do
 		Result:= across domain as g all
 					found_item(g.item) implies found_item(g.item) and then
@@ -115,13 +115,15 @@ feature  -- queries
 		Result := ""
 	end
 
-	is_same_items (other: like Current) : BOOLEAN
+	has_same_items (other: like Current) : BOOLEAN
+		-- Returns true if one bag contains the same item types as another bag and false otherwise
 	do
 		Result:= across other.domain as g all
 					found_item(g.item) end
 	end
 
 	has_enough_items (other: like Current) : BOOLEAN
+		-- Returns true if one bag has less occurrences than or equal to another bag and false otherwise
 	do
 		Result:= across other.domain as g all
 						occurrences(g.item) <= other.occurrences(g.item) end
@@ -183,11 +185,12 @@ feature -- helper queries and commands
 	verify_subtraction(a_key:G; a_quantity:INTEGER) : INTEGER
 		-- To verify subtraction gives non negative result
 	require
-		found_item(a_key) = true
+		found_an_item: found_item(a_key) = true
+		non_negative: a_quantity >= 0
 	do
 		table.search(a_key)
-		if table.found = true then
-			Result:= table.found_item-a_quantity
+		if table.found then
+			Result:= table.found_item - a_quantity
 		end
 	end
 
@@ -200,12 +203,14 @@ feature -- helper queries and commands
 		else
 			Result:= false
 		end
+	ensure
+		item_found: Result implies has(a_key)
 	end
 
 	subtract_single(a_key: G; a_quantity: INTEGER)
 		-- To subract a single item from a bag
 	require
-		verify_subtraction(a_key, a_quantity) >= 0
+		can_subtract: verify_subtraction(a_key, a_quantity) >= 0
 	local
 		item_value:INTEGER
 	do
@@ -214,5 +219,7 @@ feature -- helper queries and commands
 			table.remove(a_key)
 			table.put(item_value, a_key)
 		end
+	ensure
+		subtracted: occurrences (a_key) = old occurrences (a_key) - a_quantity
 	end
 end
