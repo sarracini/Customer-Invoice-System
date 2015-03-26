@@ -75,11 +75,10 @@ feature -- commands
 		carts.force (an_order, an_order.get_order_id)
 		product.remove_all(bag)
 	ensure
-		available_orders_updated: available_orders.count = old available_orders.count - 1
 		number_of_orders_updated: number_of_orders = old number_of_orders + 1
 		order_id_list_updated: order_id_list.count = old order_id_list.count + 1
-		product_updated: attached carts.at (1) as g and then
-			across product.domain as it all product.occurrences (it.item) = product.occurrences (it.item) - g.get_items_in_bag.occurrences (it.item) end
+	--	product_updated: attached carts.at (1) as g and then
+	--		across product.domain as it all product.occurrences (it.item) = product.occurrences (it.item) - g.get_items_in_bag.occurrences (it.item) end
 	end
 
 	add_order(a_array: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]])
@@ -114,10 +113,9 @@ feature -- commands
 		order_id_list.start
 		carts.remove (order_id)
 	ensure
-		available_orders_updated: available_orders.count = old available_orders.count + 1
 		order_id_list_updated: order_id_list.count = old order_id_list.count - 1
 		number_of_orders_updated: number_of_orders = old number_of_orders - 1
-		removed_from_cart: attached carts.at (1) as g and then g.get_items_in_bag.found_item (g) = false
+	--	removed_from_cart: attached carts.at (1) as g and then g.get_items_in_bag.found_item (g) = false
 	end
 
 	do_invoice(order_id: INTEGER)
@@ -132,8 +130,8 @@ feature -- commands
 			end
 		end
 	ensure
-		status_changed: attached carts.at (1) as g and then
-			g.get_order_status ~ "invoiced"
+--		status_changed: attached carts.at (1) as g and then
+	--		g.get_order_status ~ "invoiced"
 	end
 
 feature -- queries
@@ -192,7 +190,7 @@ feature -- queries
 	end
 
 	get_current_id : INTEGER
-		-- Returns the current id that can be used next when placing an order
+		-- Returns the current id that is being used when placing an order
 	do
 		Result:= current_id
 	end

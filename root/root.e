@@ -13,13 +13,13 @@ inherit
 create
 	make
 feature {NONE}
-	unit_test: BOOLEAN = false
+	unit_test: BOOLEAN = true
 
 	 make
 	 	do
 	 		initialize_attributes
 	 		if unit_test then
-	 			-- add your test here...
+				add_test(create {STUDENT_TEST1}.make)
 	 			show_browser
 	 			run_espec
 	 		else
