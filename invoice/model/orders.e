@@ -26,28 +26,48 @@ feature -- attributes
 feature -- commands
 
 	change_status(o_status: STRING)
+		-- Change the status of the current order
+	require
+		o_status.count > 0
 	do
 		order_status:= o_status
+	ensure
+		status_changed: order_status /= old order_status
 	end
 
 	set_order_id(o_id: INTEGER)
+		-- Set the order id to a unique number
+	require
+		o_id > 0
 	do
 		order_id:= o_id
+	ensure
+		new_order_id: order_id /= old order_id
 	end
 
 feature -- queries
 
 	get_order_id : INTEGER
+		-- Return the unique order id of the current order
 	do
 		Result:= order_id
 	end
 
 	get_order_status : STRING
+		-- Return the order status of the current order
+		-- Can be either "pending" or "invoiced"
 	do
 		Result:= order_status
 	end
 
-	get_order_items : STRING
+	get_items_in_bag : MY_BAG[STRING]
+		-- Returns all items in the bag
+	do
+		Result:= order_items
+	end
+
+	print_order_items : STRING
+		-- Prints items belonging to the order
 	do
 		Result:= ""
 		across order_items.domain as it
@@ -60,8 +80,7 @@ feature -- queries
 		end
 	end
 
-	get_items_in_bag : MY_BAG[STRING]
-	do
-		Result:= order_items
-	end
+invariant
+	non_empty_status: order_status.count > 0
+
 end

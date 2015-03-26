@@ -112,9 +112,9 @@ feature -- queries
 				if attached stock.carts.at (it.item) as g then
 					s.append (g.get_order_id.out + ": ")
 					if stock.order_id_list.at (stock.order_id_list.count) = it.item then
-						s.append (g.get_order_items)
+						s.append (g.print_order_items)
 					else
-						s.append (g.get_order_items + "%N               ")
+						s.append (g.print_order_items + "%N               ")
 					end
 				end
 			end
