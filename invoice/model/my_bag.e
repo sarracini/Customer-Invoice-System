@@ -185,7 +185,7 @@ feature -- helper queries and commands
 	verify_subtraction(a_key:G; a_quantity:INTEGER) : INTEGER
 		-- To verify subtraction gives non negative result
 	require
-		found_an_item: found_item(a_key) = true
+		has_item: found_item(a_key)
 		non_negative: a_quantity >= 0
 	do
 		table.search(a_key)
@@ -204,13 +204,14 @@ feature -- helper queries and commands
 			Result:= false
 		end
 	ensure
-		item_found: Result implies has(a_key)
+		item_found: Result implies found_item(a_key)
 	end
 
 	subtract_single(a_key: G; a_quantity: INTEGER)
 		-- To subract a single item from a bag
 	require
 		can_subtract: verify_subtraction(a_key, a_quantity) >= 0
+		has_item: found_item(a_key)
 	local
 		item_value:INTEGER
 	do

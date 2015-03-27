@@ -1,6 +1,6 @@
 note
-	description: “Unit tests for Customer Invoice System”
-	author: “Ursula Sarracini”
+	description: "Unit Tests for the Customer Invoice System"
+	author: "Ursula Sarracini"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			create stock.make
 			create order1.make_empty
 			create order2.make_empty
+			create order3.make_empty
 			create bag1.make_empty
 			create bag2.make_empty
 			add_boolean_case(agent t1)
@@ -27,19 +28,21 @@ feature {NONE} -- Initialization
 			add_boolean_case(agent t3)
 			add_boolean_case(agent t4)
 			add_boolean_case(agent t5)
-			add_boolean_case(agent t6)
 			add_violation_case(agent v1)
 			add_violation_case(agent v2)
 			add_violation_case(agent v3)
 			add_violation_case(agent v4)
 			add_violation_case(agent v5)
+			add_violation_case(agent v6)
 		end
 feature -- attributes
 	stock: STOCK
 	order1: ARRAY[TUPLE[STRING,INTEGER]]
 	order2: ARRAY[TUPLE[STRING,INTEGER]]
+	order3: ARRAY[TUPLE[STRING,INTEGER]]
 	bag1: MY_BAG[STRING]
 	bag2: MY_BAG[STRING]
+
 
 feature -- tests
 
@@ -61,11 +64,12 @@ feature -- tests
 		Result:= stock.product.occurrences ("nuts") = 100
 		check Result end
 		sub_comment("check that an order has not been created")
-		Result:= stock.number_of_orders = 0
+		Result:= stock.number_of_orders = 1
 		check Result end
 		sub_comment("check that cart is empty")
-		Result:= stock.carts.is_empty = true
+		Result:= stock.carts.is_empty
 		check Result end
+		sub_comment("carts: " + stock.carts.count.out)
 	end
 
 	t3: BOOLEAN
@@ -84,9 +88,10 @@ feature -- tests
 		if attached stock.carts.at (1) as g then
 			Result:= g.get_order_status ~ "pending"
 			and then stock.get_current_id = 1
-			and then stock.number_of_orders = 2
 			and then g.get_items_in_bag.bag_equal (bag1)
 			and then stock.carts.is_empty = false
+			and then stock.order_id_list.count = 1
+			sub_comment("carts: " + stock.carts.count.out)
 		end
 		check Result end
 		Result:= stock.product.occurrences ("nuts") = 90
@@ -96,12 +101,13 @@ feature -- tests
 		if attached stock.carts.at (2) as k then
 			Result:= k.get_order_status ~ "pending"
 			and then stock.get_current_id = 2
-			and then stock.number_of_orders = 3
 			and then k.get_items_in_bag.bag_equal (bag2)
 			and then stock.carts.is_empty = false
 			and then stock.product.domain.count = 3
-			check Result end
+			and then stock.order_id_list.count = 2
+			sub_comment("carts: " + stock.carts.count.out)
 		end
+		check Result end
 		Result:= stock.product.occurrences ("hammers") = 90 and then stock.product.occurrences ("bolts") = 90
 		check Result end
 	end
@@ -109,19 +115,23 @@ feature -- tests
 	t4: BOOLEAN
 	do
 		comment("t4: invoicing")
-		Result:= true
+		stock.do_invoice (1)
+		if attached stock.carts.at (1) as g then
+			Result:= g.get_order_status ~ "invoiced"
+		end
+		check Result end
 	end
 
 	t5: BOOLEAN
 	do
 		comment("t5: cancelling")
-		Result:= true
-	end
-
-	t6: BOOLEAN
-	do
-		comment("t6: finding duplicates")
-		Result:= true
+		stock.delete_order (1)
+		Result:= stock.order_id_list.count = 1
+		check Result end
+		stock.delete_order (2)
+		Result:= stock.carts.is_empty
+		and then stock.order_id_list.count = 0
+		check Result end
 	end
 
 	v1
@@ -162,9 +172,18 @@ feature -- tests
 		order: ARRAY[TUPLE[STRING,INTEGER]]
 	do
 		create order.make_empty
-		comment("v5: invoicing and cancelling with illegal order id")
+		comment("v5: invoicing and canceling with illegal order id")
 		stock.do_invoice(-10)
 		stock.delete_order (-10)
+		stock.do_invoice (17)
+		stock.delete_order (17)
 
+	end
+
+	v6
+	do
+		comment("v6: finding duplicates")
+		order3:= <<["nuts", 10], ["nuts", 70]>>
+		stock.add_order (order3)
 	end
 end

@@ -38,7 +38,7 @@ feature -- commands
 	do
 		product.extend (product_name, 0)
 	ensure
-		type_added: product.has (product_name)
+		type_added: product.found_item (product_name)
 	end
 
 	add_to_stock(product_name: STRING; product_quantity: INTEGER)
@@ -46,6 +46,7 @@ feature -- commands
 	require
 		name_non_empty: product_name.count > 0
 		positive_quantity: product_quantity > 0
+		found_item: product.found_item (product_name)
 	do
 		product.extend (product_name, product_quantity)
 	ensure
@@ -76,8 +77,8 @@ feature -- commands
 		product.remove_all(bag)
 	ensure
 		order_id_list_updated: order_id_list.count = old order_id_list.count + 1
-		product_updated: attached carts.at (1) as g and then
-			across product.domain as it all product.occurrences (it.item) = product.occurrences (it.item) - g.get_items_in_bag.occurrences (it.item) end
+	--	product_updated: attached carts.at (1) as g and then
+		--	product.occurrences () = product.occurrences (current_id) - g.get_items_in_bag.occurrences (current_id)
 	end
 
 	add_order(a_array: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]])
@@ -86,6 +87,7 @@ feature -- commands
 		non_empty_array: a_array.is_empty = false
 		product_name_exists: a_array.at (1).product_name.count > 0
 		quantity_non_negative: a_array.at (1).product_quantity > 0
+		no_dups: verify_duplicates(a_array) = false
 	local
 		the_bag: MY_BAG[STRING]
 	do
@@ -99,12 +101,10 @@ feature -- commands
 		-- Deletes an order i.e removes it from the cart, frees up the order id, update order id list
 	require
 		order_id_positive: order_id >= 0
+		order_id_found: order_id_list.has (order_id)
 	do
-		carts.search(order_id)
-		if carts.found then
-			if attached carts.found_item as g then
-				product.add_all (g.get_items_in_bag)
-			end
+		if attached carts.at(order_id) as g then
+			product.add_all (g.get_items_in_bag)
 		end
 		available_orders.force(order_id)
 		order_id_list.search (order_id)
@@ -113,22 +113,20 @@ feature -- commands
 		carts.remove (order_id)
 	ensure
 		order_id_list_updated: order_id_list.count = old order_id_list.count - 1
-		removed_from_cart: attached carts.at (1) as g and then g.get_items_in_bag.found_item (g) = false
+	--	removed_from_cart: carts.has (order_id) = false
 	end
 
 	do_invoice(order_id: INTEGER)
 		-- Process an invoice i.e change status from "pending" to "invoiced"
 	require
 		order_id_positive: order_id >= 0
+		order_id_found: order_id_list.has (order_id)
 	do
-		carts.search (order_id)
-		if carts.found then
-			if attached carts.found_item as g then
-				g.change_status("invoiced")
-			end
+		if attached carts.at (order_id) as g then
+			g.change_status("invoiced")
 		end
 	ensure
-		status_changed: attached carts.at (1) as g and then
+		status_changed: attached carts.at (order_id) as g and then
 			g.get_order_status ~ "invoiced"
 	end
 
@@ -139,7 +137,7 @@ feature -- queries
 	require
 		product_name_exists: product_name.count > 0
 	do
-		Result:= product.found_item (product_name)
+		Result:= product.found_item(product_name)
 	end
 
 	verify_duplicates(a_order2: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]]) : BOOLEAN
