@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {STUDENT_TEST1}."
-	author: ""
+	description: “Unit tests for Customer Invoice System”
+	author: “Ursula Sarracini”
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -114,7 +114,7 @@ feature -- tests
 
 	t5: BOOLEAN
 	do
-		comment("t5: canceling")
+		comment("t5: cancelling")
 		Result:= true
 	end
 
@@ -162,7 +162,7 @@ feature -- tests
 		order: ARRAY[TUPLE[STRING,INTEGER]]
 	do
 		create order.make_empty
-		comment("v5: invoicing and canceling with illegal order id")
+		comment("v5: invoicing and cancelling with illegal order id")
 		stock.do_invoice(-10)
 		stock.delete_order (-10)
 

@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {ROOT}."
-	author: ""
+	author: “Ursula Sarracini“
 	date: "$Date$"
 	revision: "$Revision$"
 
