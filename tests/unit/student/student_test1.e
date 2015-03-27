@@ -26,6 +26,13 @@ feature {NONE} -- Initialization
 			add_boolean_case(agent t2)
 			add_boolean_case(agent t3)
 			add_boolean_case(agent t4)
+			add_boolean_case(agent t5)
+			add_boolean_case(agent t6)
+			add_violation_case(agent v1)
+			add_violation_case(agent v2)
+			add_violation_case(agent v3)
+			add_violation_case(agent v4)
+			add_violation_case(agent v5)
 		end
 feature -- attributes
 	stock: STOCK
@@ -54,7 +61,7 @@ feature -- tests
 		Result:= stock.product.occurrences ("nuts") = 100
 		check Result end
 		sub_comment("check that an order has not been created")
-		Result:= stock.number_of_orders = 1
+		Result:= stock.number_of_orders = 0
 		check Result end
 		sub_comment("check that cart is empty")
 		Result:= stock.carts.is_empty = true
@@ -101,6 +108,63 @@ feature -- tests
 
 	t4: BOOLEAN
 	do
+		comment("t4: invoicing")
+		Result:= true
+	end
+
+	t5: BOOLEAN
+	do
+		comment("t5: canceling")
+		Result:= true
+	end
+
+	t6: BOOLEAN
+	do
+		comment("t6: finding duplicates")
+		Result:= true
+	end
+
+	v1
+	do
+		comment("v1: create blank type")
+		stock.create_type ("")
+	end
+
+	v2
+	do
+		comment("v2: add to stock with blank type and negative amount")
+		stock.add_to_stock ("nuts", -10)
+		stock.add_to_stock ("", 10)
+	end
+
+	v3
+	local
+		bag: MY_BAG[STRING]
+	do
+		create bag.make_empty
+		comment("v3: create order must be non empty")
+		stock.create_order (bag)
+	end
+
+	v4
+	local
+		order: ARRAY[TUPLE[STRING,INTEGER]]
+	do
+		create order.make_empty
+		comment("v4: add an order must all all fields non-empty")
+		stock.add_order (order)
+		order:=<<["",-10]>>
+		stock.add_order (order)
+	end
+
+	v5
+	local
+		order: ARRAY[TUPLE[STRING,INTEGER]]
+	do
+		create order.make_empty
+		comment("v5: invoicing and canceling with illegal order id")
+		stock.do_invoice(-10)
+		stock.delete_order (-10)
 
 	end
 end

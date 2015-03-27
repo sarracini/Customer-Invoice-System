@@ -114,7 +114,7 @@ feature -- commands
 		carts.remove (order_id)
 	ensure
 		order_id_list_updated: order_id_list.count = old order_id_list.count - 1
-		number_of_orders_updated: number_of_orders = old number_of_orders - 1
+	--	number_of_orders_updated: number_of_orders = old number_of_orders - 1
 	--	removed_from_cart: attached carts.at (1) as g and then g.get_items_in_bag.found_item (g) = false
 	end
 
