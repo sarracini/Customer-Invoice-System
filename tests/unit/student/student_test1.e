@@ -69,7 +69,6 @@ feature -- tests
 		sub_comment("check that cart is empty")
 		Result:= stock.carts.is_empty
 		check Result end
-		sub_comment("carts: " + stock.carts.count.out)
 	end
 
 	t3: BOOLEAN
@@ -91,7 +90,6 @@ feature -- tests
 			and then g.get_items_in_bag.bag_equal (bag1)
 			and then stock.carts.is_empty = false
 			and then stock.order_id_list.count = 1
-			sub_comment("carts: " + stock.carts.count.out)
 		end
 		check Result end
 		Result:= stock.product.occurrences ("nuts") = 90
@@ -105,7 +103,6 @@ feature -- tests
 			and then stock.carts.is_empty = false
 			and then stock.product.domain.count = 3
 			and then stock.order_id_list.count = 2
-			sub_comment("carts: " + stock.carts.count.out)
 		end
 		check Result end
 		Result:= stock.product.occurrences ("hammers") = 90 and then stock.product.occurrences ("bolts") = 90
