@@ -77,8 +77,7 @@ feature -- commands
 		product.remove_all(bag)
 	ensure
 		order_id_list_updated: order_id_list.count = old order_id_list.count + 1
-	--	product_updated: attached carts.at (1) as g and then
-		--	product.occurrences () = product.occurrences (current_id) - g.get_items_in_bag.occurrences (current_id)
+	--	product_updated: attached carts.at (current_id) as g and then product.remove_all (g.order_items)
 	end
 
 	add_order(a_array: ARRAY[TUPLE[product_name: STRING; product_quantity: INTEGER]])
@@ -113,7 +112,7 @@ feature -- commands
 		carts.remove (order_id)
 	ensure
 		order_id_list_updated: order_id_list.count = old order_id_list.count - 1
-	--	removed_from_cart: carts.has (order_id) = false
+		removed_from_cart: carts.has (order_id) = false
 	end
 
 	do_invoice(order_id: INTEGER)
