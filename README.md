@@ -69,8 +69,6 @@ invoice(order_id: INTEGER)
 cancel_order(order_id: INTEGER)
   order id is not valid
 ```
-#To Do:
-- write more acceptance tests
 
 #License
 MIT © Ursula Sarracini
