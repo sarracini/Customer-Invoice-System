@@ -13,7 +13,7 @@ add_order(<<["hammers", 1]>>)  -- Error 4: not enough in stock
 add_order(<<["nuts", 1]>>)     -- Error 4: not enough in stock
 invoice(1)
 invoice(2)           -- Error 6: order id is not in the database
-invoice(1)           -- Error 8: order lready invoiced
+invoice(1)           -- Error 8: order already invoiced
 cancel_order(1)
 add_product("hammers", 100)
 add_order(<<["hammers", 2], ["nuts", 10], ["hammers", 1]>>) -- Error 7: dupls
