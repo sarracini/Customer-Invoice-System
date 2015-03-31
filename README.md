@@ -71,9 +71,6 @@ cancel_order(order_id: INTEGER)
 ```
 #To Do:
 - write more acceptance tests
-- write unit tests
-- stronger contracts
-- design documentation (and comments)
 
 #License
 MIT © Ursula Sarracini
