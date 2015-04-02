@@ -49,7 +49,7 @@ feature -- queries
 		do
 			s:= ""
 			----------------------------------------- report display
-			s.append ("  report:      "+ status_message.out)
+			s.append ("  report:      " + status_message.out)
 
 			----------------------------------------- id display
 			domain_count:= 1

@@ -204,7 +204,7 @@ feature -- helper queries and commands
 			Result:= false
 		end
 	ensure
-		item_found: Result implies found_item(a_key)
+		item_found: Result implies has(a_key)
 	end
 
 	subtract_single(a_key: G; a_quantity: INTEGER)
